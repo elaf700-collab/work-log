@@ -786,7 +786,76 @@ tbody td:nth-child(5),tbody td:nth-child(6),tbody td:nth-child(7),tbody td:nth-c
 <script>
 let goals=[],recs=[],addFiles=[],editFiles=[];
 
+function showReadOnly(payload){
+  const daysLeft = Math.ceil((payload.exp - Date.now())/86400000);
+  const exp = new Date(payload.exp).toLocaleDateString('ar-SA');
+  document.body.innerHTML=`
+  <div style="font-family:'Tajawal',sans-serif;direction:rtl;background:#0B0C10;color:#EEF0FA;min-height:100vh">
+    <div style="background:#111318;border-bottom:1px solid rgba(255,255,255,.07);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <h1 style="color:#0EA5E9;font-size:20px;font-weight:800">📋 سجل توثيق الأعمال</h1>
+      <span style="color:#8A8DAA;font-size:13px">${payload.name} — ${payload.role}</span>
+    </div>
+    <div style="background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.4);border-radius:8px;padding:10px 16px;margin:16px 24px;color:#0EA5E9;font-size:13px;font-weight:700">
+      🔒 للقراءة فقط &nbsp;|&nbsp; صالح حتى: ${exp} &nbsp;<span style="color:#F59E0B">(متبقي ${daysLeft} أيام)</span>
+    </div>
+    <div style="max-width:1000px;margin:0 auto;padding:0 24px 60px">
+      <div style="background:#161820;border:1px solid rgba(255,255,255,.07);border-radius:12px;margin-bottom:20px;overflow:hidden">
+        <div style="padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.07);font-size:16px;font-weight:800">🎯 الأهداف الوظيفية</div>
+        <div style="padding:12px 18px">${payload.goals.map((g,i)=>`
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+            <div style="background:rgba(14,165,233,.15);color:#0EA5E9;font-weight:800;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center">${i+1}</div>
+            <div style="font-size:14px;line-height:1.7;flex:1">${g}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div style="background:#161820;border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden">
+        <div style="padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.07);font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:space-between">
+          <span>📄 سجل الأعمال اليومية</span>
+          <span style="color:#8A8DAA;font-size:13px">${payload.recs.length} سجل</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;min-width:700px">
+            <thead><tr style="background:linear-gradient(90deg,#0EA5E9,#0369A1)">
+              <th style="padding:11px 14px;text-align:right;font-size:13px">#</th>
+              <th style="padding:11px 14px;text-align:right;font-size:13px">اليوم</th>
+              <th style="padding:11px 14px;text-align:right;font-size:13px">التاريخ</th>
+              <th style="padding:11px 14px;text-align:right;font-size:13px">وصف العمل</th>
+              <th style="padding:11px 14px;text-align:center;font-size:13px">الحالة</th>
+              <th style="padding:11px 14px;text-align:center;font-size:13px">رقم الهدف</th>
+              <th style="padding:11px 14px;text-align:center;font-size:13px">الجدارة</th>
+              <th style="padding:11px 14px;text-align:center;font-size:13px">المرفقات</th>
+            </tr></thead>
+            <tbody>${payload.recs.map((r,i)=>{
+              const sc=r.status==='مكتمل'?'#10B981':r.status==='قيد التنفيذ'?'#F59E0B':'#6366F1';
+              const atts=(r.attachments||[]).map(a=>a.data?`<img src="${a.data}" style="max-width:50px;border-radius:6px;margin:2px">`:'📄').join('')||'-';
+              return `<tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+                <td style="padding:11px 14px;font-size:13px">${i+1}</td>
+                <td style="padding:11px 14px;font-size:13px">${r.day}</td>
+                <td style="padding:11px 14px;font-size:13px">${r.date}</td>
+                <td style="padding:11px 14px;font-size:13px;line-height:1.6">${r.desc}</td>
+                <td style="padding:11px 14px;font-size:13px;text-align:center;color:${sc};font-weight:700">${r.status}</td>
+                <td style="padding:11px 14px;font-size:13px;text-align:center">${r.goalRef}</td>
+                <td style="padding:11px 14px;font-size:13px;text-align:center">${r.comp}</td>
+                <td style="padding:11px 14px;font-size:13px;text-align:center">${atts}</td>
+              </tr>`;}).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
 window.onload=()=>{
+  // Check if opened as read-only shared link
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('view')){
+    try{
+      const payload = JSON.parse(decodeURIComponent(escape(atob(params.get('view')))));
+      if(Date.now() > payload.exp){ document.body.innerHTML='<div style="font-family:Tajawal,sans-serif;direction:rtl;text-align:center;padding:80px;background:#0B0C10;color:#F43F5E;font-size:20px;min-height:100vh">⚠️ انتهت صلاحية هذا الرابط</div>'; return; }
+      showReadOnly(payload); return;
+    }catch(e){}
+  }
   const sg=localStorage.getItem('rc2_g'),sr=localStorage.getItem('rc2_r'),su=localStorage.getItem('rc2_u'),sp=localStorage.getItem('rc2_p');
   if(sg)goals=JSON.parse(sg);
   if(sr)recs=JSON.parse(sr);
@@ -1145,10 +1214,17 @@ function shareLink(){
   const exp = expDate.toLocaleDateString('ar-SA');
   const n = document.getElementById('dName').textContent;
   const ro = document.getElementById('dRole').textContent;
-  // Strip attachments binary data to keep URL manageable
-  const recsClean = recs.map(r=>({...r, attachments:(r.attachments||[]).map(a=>a.type&&a.type.startsWith('image/')?{type:a.type,name:a.name,data:a.data}:{type:a.type,name:a.name,data:''})}));
+  const recsClean = recs.map(r=>({...r, attachments:(r.attachments||[]).map(a=>a.type&&a.type.startsWith('image/')?{type:a.type,name:a.name,data:a.data}:{type:a.type,name:a.name,data:''})}) );
   const payload = {goals, recs:recsClean, name:n, role:ro, exp:expDate.getTime()};
   const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const url = 'https://elaf700-collab.github.io/work-log/?view=' + encoded;
+  navigator.clipboard.writeText(url).then(()=>{
+    showT('✅ تم نسخ الرابط — صالح حتى '+exp,'ta');
+  }).catch(()=>{
+    prompt('انسخ الرابط:',url);
+  });
+  closeDD();
+}
 
   // Build a self-contained read-only HTML page
   const html=`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
