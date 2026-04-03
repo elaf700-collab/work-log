@@ -465,6 +465,9 @@ tbody td:nth-child(5),tbody td:nth-child(6),tbody td:nth-child(7),tbody td:nth-c
     </div>
     <div id="authErr" style="display:none;color:#F43F5E;font-size:13px;margin-bottom:10px;text-align:center"></div>
     <button id="authBtn" onclick="doAuth()" style="width:100%;background:var(--a);color:white;border:none;border-radius:8px;padding:11px;font-family:Tajawal,sans-serif;font-size:15px;font-weight:700;cursor:pointer">تسجيل الدخول</button>
+    <div id="forgotRow" style="text-align:center;margin-top:10px">
+      <button onclick="_doForgotPass()" style="background:none;border:none;color:var(--text2);font-family:Tajawal,sans-serif;font-size:13px;cursor:pointer;text-decoration:underline">نسيت كلمة المرور؟</button>
+    </div>
     <div style="display:flex;align-items:center;gap:10px;margin:14px 0">
       <div style="flex:1;height:1px;background:var(--border2)"></div>
       <span style="color:var(--text3);font-size:12px">أو</span>
@@ -843,7 +846,7 @@ tbody td:nth-child(5),tbody td:nth-child(6),tbody td:nth-child(7),tbody td:nth-c
 <!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -933,6 +936,22 @@ window._doSignUp = async function() {
   }
 };
 
+window._doForgotPass = async function() {
+  const email = document.getElementById('authEmail').value.trim();
+  const err = document.getElementById('authErr');
+  if(!email){ err.textContent = 'أدخلي البريد الإلكتروني أولاً'; err.style.display='block'; return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    err.style.color='#10B981';
+    err.textContent = '✅ تم إرسال رابط إعادة التعيين على بريدك';
+    err.style.display='block';
+  } catch(e) {
+    err.style.color='#F43F5E';
+    err.textContent = 'البريد غير مسجل';
+    err.style.display='block';
+  }
+};
+
 window._doSignOut = async function() {
   await signOut(auth);
   goals = []; recs = [];
@@ -966,10 +985,12 @@ function switchTab(mode){
     btnIn.style.background = 'var(--a)'; btnIn.style.color = 'white';
     btnUp.style.background = 'transparent'; btnUp.style.color = 'var(--text2)';
     authBtn.textContent = 'تسجيل الدخول';
+    document.getElementById('forgotRow').style.display='block';
   } else {
     btnUp.style.background = 'var(--a)'; btnUp.style.color = 'white';
     btnIn.style.background = 'transparent'; btnIn.style.color = 'var(--text2)';
     authBtn.textContent = 'إنشاء حساب';
+    document.getElementById('forgotRow').style.display='none';
   }
 }
 function doAuth(){
