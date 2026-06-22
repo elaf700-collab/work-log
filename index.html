@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة العمل اليومي - فريق الوعي الفكري بالخرج</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0F1F3D; --navy-mid: #1A3160;
+  --teal: #0EA5A0; --teal-light: #14B8B2; --teal-faint: #E6F7F7;
+  --amber: #F59E0B;
+  --red: #EF4444;
+  --green: #10B981;
+  --white: #FFFFFF; --bg: #F0F2F7; --card: #FFFFFF;
+  --text-dark: #0F1F3D; --text-mid: #374151; --text-soft: #64748B; --text-faint: #94A3B8;
+  --border: #E2E8F0; --border-dark: #CBD5E1;
+  --sidebar-w: 260px; --radius: 12px; --radius-sm: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 24px rgba(0,0,0,0.10);
+}
+body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--text-dark); direction: rtl; min-height: 100vh; overflow-x: hidden; }
+.hidden { display: none !important; }
+
+/* LOGIN */
+.login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(150deg, #0B1A33 0%, #0F2A4A 45%, #0D3D3A 100%); position: fixed; inset: 0; z-index: 100; overflow: hidden; }
+.login-bg-geo {
+  position: absolute; inset: 0; opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='white' stroke-width='0.8'%3E%3Cpolygon points='30,4 56,18 56,42 30,56 4,42 4,18'/%3E%3Cpolygon points='30,14 46,23 46,37 30,46 14,37 14,23'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 60px 60px;
+}
+.login-glow { position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(14,165,160,0.15) 0%, transparent 70%); top: -100px; right: -100px; pointer-events: none; }
+.login-glow2 { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%); bottom: -80px; left: -80px; pointer-events: none; }
+.login-card { background: rgba(255,255,255,0.97); border-radius: 22px; padding: 44px 40px 40px; width: 100%; max-width: 420px; box-shadow: 0 32px 80px rgba(0,0,0,0.35); position: relative; z-index: 1; border: 1px solid rgba(255,255,255,0.2); }
+.login-brand { text-align: center; margin-bottom: 32px; }
+.login-emblem { width: 74px; height: 74px; border-radius: 20px; background: linear-gradient(135deg, #0F1F3D, #0EA5A0); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 8px 24px rgba(14,165,160,0.3); }
+.login-emblem svg { width: 40px; height: 40px; }
+.login-team-name { font-size: 1.15rem; font-weight: 800; color: var(--navy); line-height: 1.3; }
+.login-tagline { font-size: 0.8rem; color: var(--teal); font-weight: 600; margin-top: 5px; letter-spacing: 0.02em; }
+.login-divider { display: flex; align-items: center; gap: 10px; margin: 4px 0 24px; }
+.login-divider::before, .login-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.login-divider span { font-size: 0.72rem; color: var(--text-faint); white-space: nowrap; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 0.83rem; font-weight: 600; color: var(--text-mid); margin-bottom: 8px; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-family: 'Cairo', sans-serif; font-size: 0.9rem; direction: rtl; background: #FAFBFC; color: var(--text-dark);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(14,165,160,0.12); background: white; }
+.form-group textarea { resize: vertical; min-height: 100px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.required { color: var(--red); }
+.btn-login { width: 100%; padding: 13px; background: var(--teal); color: white; border: none; border-radius: var(--radius-sm); font-family: 'Cairo', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+.btn-login:hover { background: var(--teal-light); }
+.login-hint { text-align: center; margin-top: 18px; font-size: 0.75rem; color: var(--text-faint); border: 1px dashed var(--border); padding: 10px; border-radius: 8px; }
+
+/* LAYOUT */
+.app-layout { display: grid; grid-template-columns: var(--sidebar-w) 1fr; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar { background: var(--navy); height: 100vh; position: sticky; top: 0; display: flex; flex-direction: column; overflow: hidden; z-index: 50; }
+.sidebar-header { padding: 22px 20px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.sidebar-logo { display: flex; align-items: center; gap: 12px; }
+.sidebar-logo svg { width: 38px; height: 38px; flex-shrink: 0; }
+.sidebar-title { font-size: 0.95rem; font-weight: 700; color: white; }
+.sidebar-subtitle { font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
+.sidebar-stripe { height: 3px; background: repeating-linear-gradient(90deg, var(--teal) 0, var(--teal) 5px, transparent 5px, transparent 11px, var(--amber) 11px, var(--amber) 16px, transparent 16px, transparent 22px); opacity: 0.55; }
+.sidebar-nav { flex: 1; padding: 14px 10px; display: flex; flex-direction: column; gap: 2px; }
+.nav-item { display: flex; align-items: center; gap: 11px; padding: 10px 13px; border-radius: 9px; border: none; background: transparent; color: rgba(255,255,255,0.6); font-family: 'Cairo', sans-serif; font-size: 0.88rem; font-weight: 500; cursor: pointer; text-align: right; width: 100%; transition: background 0.15s, color 0.15s; }
+.nav-item svg { width: 17px; height: 17px; flex-shrink: 0; }
+.nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+.nav-item.active { background: var(--teal); color: white; }
+.sidebar-user { display: flex; align-items: center; gap: 10px; padding: 14px 16px 18px; border-top: 1px solid rgba(255,255,255,0.08); }
+.user-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--teal); color: white; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.user-info { flex: 1; min-width: 0; }
+.user-name { font-size: 0.83rem; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 0.7rem; color: rgba(255,255,255,0.45); }
+.logout-btn { background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.4); padding: 6px; border-radius: 6px; display: flex; transition: color 0.15s, background 0.15s; }
+.logout-btn svg { width: 15px; height: 15px; }
+.logout-btn:hover { color: white; background: rgba(255,255,255,0.1); }
+
+/* MAIN */
+.main-content { display: flex; flex-direction: column; min-height: 100vh; }
+.topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 28px; height: 62px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 40; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+.menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; border-radius: 8px; color: var(--text-mid); }
+.menu-toggle svg { width: 20px; height: 20px; }
+.topbar-identity { flex: 1; min-width: 0; }
+.page-title { font-size: 1.05rem; font-weight: 700; color: var(--navy); line-height: 1.2; }
+.topbar-team { font-size: 0.72rem; color: var(--teal); font-weight: 600; margin-top: 1px; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.current-date { font-size: 0.8rem; color: var(--text-soft); }
+
+/* BUTTONS */
+.btn-primary { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; background: var(--teal); color: white; border: none; border-radius: var(--radius-sm); font-family: 'Cairo', sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+.btn-primary svg { width: 15px; height: 15px; }
+.btn-primary:hover { background: var(--teal-light); }
+.btn-outline { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; background: transparent; color: var(--text-mid); border: 1.5px solid var(--border-dark); border-radius: var(--radius-sm); font-family: 'Cairo', sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.btn-outline:hover { border-color: var(--teal); color: var(--teal); }
+.btn-danger { padding: 9px 18px; background: var(--red); color: white; border: none; border-radius: var(--radius-sm); font-family: 'Cairo', sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+.btn-danger:hover { background: #DC2626; }
+.btn-icon { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 7px; border: none; cursor: pointer; background: transparent; transition: background 0.15s, color 0.15s; }
+.btn-icon svg { width: 14px; height: 14px; }
+.btn-icon.v { color: var(--text-soft); } .btn-icon.v:hover { background: #F1F5F9; color: var(--navy); }
+.btn-icon.e { color: var(--teal); } .btn-icon.e:hover { background: var(--teal-faint); }
+.btn-icon.d { color: var(--red); } .btn-icon.d:hover { background: #FEE2E2; }
+
+/* PAGES */
+.page { display: none; padding: 26px 28px; }
+.page.active { display: block; }
+
+/* CARD */
+.card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.card-header { padding: 16px 22px; border-bottom: 1px solid var(--border); }
+.card-header h3 { font-size: 0.92rem; font-weight: 700; color: var(--navy); }
+
+/* STAT CARDS */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: var(--card); border-radius: var(--radius); padding: 20px 22px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow); border-right: 3px solid var(--navy); transition: transform 0.15s; }
+.stat-card:hover { transform: translateY(-2px); }
+.stat-total  { border-right-color: var(--navy); }
+.stat-done   { border-right-color: var(--navy); }
+.stat-prog   { border-right-color: var(--navy); }
+.stat-team   { border-right-color: var(--navy); }
+.stat-icon { width: 44px; height: 44px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.stat-total .stat-icon { background: #EEF2FF; color: var(--navy); }
+.stat-done  .stat-icon { background: #EEF2FF; color: var(--navy); }
+.stat-prog  .stat-icon { background: #EEF2FF; color: var(--navy); }
+.stat-team  .stat-icon { background: #EEF2FF; color: var(--navy); }
+.stat-icon svg { width: 20px; height: 20px; }
+.stat-num { font-size: 1.75rem; font-weight: 800; color: var(--navy); line-height: 1; }
+.stat-label { font-size: 0.76rem; color: var(--text-soft); margin-top: 4px; }
+.dashboard-grid { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
+
+/* ACTIVITY */
+.activity-list { padding: 4px 0; }
+.act-item { display: flex; align-items: flex-start; gap: 12px; padding: 13px 22px; border-bottom: 1px solid var(--border); }
+.act-item:last-child { border-bottom: none; }
+.act-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); margin-top: 7px; flex-shrink: 0; }
+.act-title { font-size: 0.875rem; font-weight: 600; color: var(--text-dark); }
+.act-meta { font-size: 0.74rem; color: var(--text-soft); margin-top: 3px; }
+.act-status { font-size: 0.76rem; color: var(--text-soft); white-space: nowrap; margin-top: 2px; }
+.empty-act { padding: 28px 22px; text-align: center; color: var(--text-faint); font-size: 0.875rem; }
+
+/* CATEGORY BARS */
+.cat-chart { padding: 14px 22px; }
+.cat-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.cat-row:last-child { margin-bottom: 0; }
+.cat-name { font-size: 0.8rem; color: var(--text-mid); width: 76px; flex-shrink: 0; text-align: right; }
+.cat-track { flex: 1; background: var(--border); border-radius: 3px; height: 7px; overflow: hidden; }
+.cat-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+.cat-cnt { font-size: 0.78rem; color: var(--text-soft); width: 22px; text-align: left; }
+
+/* TABLE */
+.tbl-wrap { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: auto; }
+.tbl { width: 100%; border-collapse: collapse; min-width: 700px; }
+.tbl th { background: #F8FAFC; padding: 12px 16px; text-align: right; font-size: 0.77rem; font-weight: 700; color: var(--text-soft); border-bottom: 1px solid var(--border); white-space: nowrap; }
+.tbl td { padding: 13px 16px; border-bottom: 1px solid var(--border); font-size: 0.86rem; color: var(--text-mid); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: #FAFBFD; }
+.tbl-title { font-weight: 600; color: var(--text-dark); }
+.tbl-desc { font-size: 0.76rem; color: var(--text-soft); margin-top: 2px; max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tbl-actions { display: flex; gap: 2px; justify-content: flex-end; }
+.empty-tbl { padding: 56px 20px; text-align: center; color: var(--text-faint); }
+.empty-tbl svg { width: 44px; height: 44px; opacity: 0.35; display: block; margin: 0 auto 12px; }
+
+/* TOOLBAR */
+.toolbar { background: var(--card); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 14px; box-shadow: var(--shadow); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.search-box { display: flex; align-items: center; gap: 9px; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 0 13px; flex: 1; min-width: 180px; }
+.search-box svg { width: 15px; height: 15px; color: var(--text-faint); flex-shrink: 0; }
+.search-box input { background: none; border: none; outline: none; font-family: 'Cairo', sans-serif; font-size: 0.86rem; direction: rtl; width: 100%; padding: 9px 0; color: var(--text-dark); }
+.filter-wrap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.filter-wrap select, .filter-wrap input[type="date"] { padding: 8px 11px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'Cairo', sans-serif; font-size: 0.8rem; color: var(--text-mid); background: white; direction: rtl; }
+.filter-wrap select:focus, .filter-wrap input[type="date"]:focus { outline: none; border-color: var(--teal); }
+
+/* STATUS TEXT */
+.s-done { color: var(--green); font-weight: 600; }
+.s-prog { color: var(--amber); font-weight: 600; }
+
+/* STATS PAGE */
+.section-label { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--teal); display: inline-block; }
+.member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.member-card { background: var(--card); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+.mc-head { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.mc-av { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--navy), var(--teal)); color: white; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; }
+.mc-name { font-weight: 700; font-size: 0.88rem; color: var(--navy); }
+.mc-role { font-size: 0.72rem; color: var(--text-soft); }
+.mc-nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.mc-num { text-align: center; background: var(--bg); border-radius: 7px; padding: 9px 4px; }
+.mc-n { font-size: 1.25rem; font-weight: 800; color: var(--navy); }
+.mc-l { font-size: 0.63rem; color: var(--text-soft); margin-top: 2px; }
+.mc-atts { text-align: center; font-size: 0.74rem; color: var(--text-soft); margin-top: 8px; }
+.team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.bar-chart { padding: 18px 22px; }
+.bar-item { margin-bottom: 13px; }
+.bar-item:last-child { margin-bottom: 0; }
+.bar-top { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.bar-name { font-size: 0.8rem; color: var(--text-mid); }
+.bar-val { font-size: 0.8rem; color: var(--text-soft); }
+.bar-track { background: var(--border); border-radius: 3px; height: 9px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; background: var(--teal); transition: width 0.5s; }
+
+/* REPORTS */
+.reports-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 24px; }
+.rpt-card { background: var(--card); border-radius: var(--radius); padding: 26px 22px; box-shadow: var(--shadow); cursor: pointer; text-align: center; transition: transform 0.2s, box-shadow 0.2s; border: 2px solid transparent; }
+.rpt-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--teal); }
+.rpt-icon { width: 56px; height: 56px; border-radius: 14px; background: var(--teal-faint); color: var(--teal); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+.rpt-icon svg { width: 26px; height: 26px; }
+.rpt-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 7px; }
+.rpt-card p { font-size: 0.8rem; color: var(--text-soft); line-height: 1.55; margin-bottom: 16px; }
+.rpt-card span.rpt-btn { display: inline-block; padding: 7px 18px; background: var(--teal); color: white; border-radius: 7px; font-size: 0.8rem; font-weight: 600; }
+.rpt-output { background: var(--card); border-radius: var(--radius); padding: 30px; box-shadow: var(--shadow); }
+.rpt-header { text-align: center; margin-bottom: 26px; padding-bottom: 18px; border-bottom: 2px solid var(--navy); }
+.rpt-org { font-size: 0.78rem; color: var(--text-soft); margin-bottom: 4px; }
+.rpt-title { font-size: 1.25rem; font-weight: 800; color: var(--navy); }
+.rpt-period { font-size: 0.84rem; color: var(--text-soft); margin-top: 5px; }
+.rpt-issued { font-size: 0.72rem; color: var(--text-faint); margin-top: 6px; }
+.rpt-section { font-size: 0.92rem; font-weight: 700; color: var(--navy); margin: 22px 0 12px; padding-right: 11px; border-right: 3px solid var(--teal); }
+.rpt-summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
+.rpt-sum-box { background: var(--bg); border-radius: 9px; padding: 14px; text-align: center; }
+.rpt-sum-n { font-size: 1.5rem; font-weight: 800; color: var(--navy); }
+.rpt-sum-l { font-size: 0.72rem; color: var(--text-soft); margin-top: 3px; }
+.rpt-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 18px; }
+.rpt-table th { background: var(--navy); color: white; padding: 9px 13px; text-align: right; }
+.rpt-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); color: var(--text-mid); }
+.rpt-table tr:last-child td { border-bottom: none; }
+.rpt-footer-note { background: var(--bg); border-radius: 8px; padding: 12px 16px; font-size: 0.8rem; color: var(--text-soft); }
+.rpt-actions { display: flex; gap: 10px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(15,31,61,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 20px; backdrop-filter: blur(2px); }
+.modal { background: var(--white); border-radius: 15px; width: 100%; max-width: 560px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 24px 64px rgba(0,0,0,0.2); animation: mIn 0.18s ease; }
+.modal-lg { max-width: 700px; }
+.modal-sm { max-width: 400px; }
+@keyframes mIn { from { opacity:0; transform:translateY(-10px) scale(0.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+.modal-head { padding: 20px 22px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.modal-head h2 { font-size: 0.97rem; font-weight: 700; color: var(--navy); }
+.modal-x { background: none; border: none; cursor: pointer; padding: 5px; border-radius: 7px; color: var(--text-soft); display: flex; }
+.modal-x svg { width: 17px; height: 17px; }
+.modal-x:hover { background: var(--bg); }
+.modal-body { padding: 20px 22px; overflow-y: auto; flex: 1; }
+.modal-foot { padding: 14px 22px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-shrink: 0; }
+
+/* STATUS TOGGLE */
+.st-toggle { display: flex; border: 1.5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.st-btn { flex: 1; padding: 9px; background: white; border: none; font-family: 'Cairo', sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; color: var(--text-soft); transition: background 0.15s, color 0.15s; }
+.st-btn.on { background: var(--teal); color: white; }
+
+/* FILE UPLOAD */
+.file-drop { border: 2px dashed var(--border-dark); border-radius: var(--radius-sm); padding: 22px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; color: var(--text-soft); }
+.file-drop:hover { border-color: var(--teal); background: var(--teal-faint); }
+.file-drop svg { width: 26px; height: 26px; display: block; margin: 0 auto 8px; }
+.file-drop span { font-size: 0.875rem; font-weight: 500; }
+.file-drop small { display: block; font-size: 0.73rem; color: var(--text-faint); margin-top: 4px; }
+.file-list { margin-top: 10px; display: flex; flex-direction: column; gap: 7px; }
+.file-item { display: flex; align-items: center; gap: 9px; padding: 7px 11px; background: var(--bg); border-radius: 7px; font-size: 0.79rem; }
+.fi-icon { font-size: 0.95rem; }
+.fi-name { flex: 1; color: var(--text-mid); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fi-size { color: var(--text-faint); flex-shrink: 0; }
+.fi-rm { background: none; border: none; cursor: pointer; color: var(--text-faint); padding: 2px; font-size: 0.8rem; }
+.fi-rm:hover { color: var(--red); }
+
+/* VIEW DETAILS */
+.vd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.vd-box { background: var(--bg); border-radius: 8px; padding: 12px 14px; }
+.vd-lbl { font-size: 0.7rem; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 5px; }
+.vd-val { font-size: 0.88rem; color: var(--text-dark); font-weight: 500; }
+.vd-desc { background: var(--bg); border-radius: 8px; padding: 13px 14px; margin-bottom: 13px; }
+.vd-desc p { font-size: 0.875rem; color: var(--text-mid); line-height: 1.7; }
+.vd-slbl { font-size: 0.72rem; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 9px; }
+.hist-list { display: flex; flex-direction: column; }
+.hist-item { display: flex; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 0.79rem; }
+.hist-item:last-child { border-bottom: none; }
+.hist-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); margin-top: 4px; flex-shrink: 0; }
+.hist-txt { color: var(--text-mid); }
+.hist-dt { font-size: 0.71rem; color: var(--text-faint); margin-top: 2px; }
+.atts-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+.att-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border: 1px solid var(--border); border-radius: 7px; font-size: 0.76rem; color: var(--text-mid); }
+
+/* USERS */
+.page-top { margin-bottom: 14px; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); background: var(--navy); color: white; padding: 11px 22px; border-radius: 9px; font-size: 0.875rem; font-weight: 600; z-index: 1000; box-shadow: var(--shadow-md); animation: tIn 0.22s ease; }
+.toast.ok { background: var(--green); }
+.toast.err { background: var(--red); }
+@keyframes tIn { from { opacity:0; transform:translateX(-50%) translateY(8px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+
+/* MOBILE */
+@media (max-width: 1100px) { .stats-grid { grid-template-columns: repeat(2,1fr); } .dashboard-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) {
+  .app-layout { grid-template-columns: 1fr; }
+  .sidebar { position: fixed; right:0; top:0; bottom:0; transform:translateX(100%); transition:transform 0.25s; z-index:200; }
+  .sidebar.open { transform:translateX(0); }
+  .menu-toggle { display: flex; }
+  .form-row { grid-template-columns: 1fr; }
+  .page { padding: 16px; }
+  .topbar { padding: 0 16px; }
+  .reports-grid { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .tbl th:nth-child(3), .tbl td:nth-child(3), .tbl th:nth-child(5), .tbl td:nth-child(5) { display: none; }
+}
+@media print {
+  .topbar, .sidebar, .rpt-actions, .toolbar, #addRecordBtn { display: none !important; }
+  .page { display: block !important; padding: 0; }
+  .rpt-output { box-shadow: none; }
+  body { background: white; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-bg-geo"></div>
+  <div class="login-glow"></div>
+  <div class="login-glow2"></div>
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-emblem">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M8 12h24M8 20h17M8 28h11" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="31" cy="28" r="6" fill="#F59E0B"/>
+          <path d="M28.8 28l1.6 1.6 3.2-3.2" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="login-team-name">فريق الوعي الفكري بالخرج</div>
+      <div class="login-tagline">نُعلي الوعي · نُرسّخ الهوية · نُحصّن المجتمع</div>
+    </div>
+    <div class="login-divider"><span>تسجيل الدخول</span></div>
+    <div class="form-group">
+      <label>البريد الإلكتروني</label>
+      <input type="email" id="lgUser" placeholder="example@email.com" style="direction:ltr;text-align:right">
+    </div>
+    <div class="form-group">
+      <label>كلمة المرور</label>
+      <input type="password" id="lgPass" placeholder="أدخل كلمة المرور">
+    </div>
+    <button class="btn-login" onclick="doLogin()">دخول</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="mainApp" class="app-layout hidden">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <svg viewBox="0 0 38 38" fill="none"><rect width="38" height="38" rx="9" fill="#0EA5A0"/><path d="M9 12h20M9 19h14M9 26h9" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="28" cy="26" r="5" fill="#F59E0B"/><path d="M26 26l1.2 1.2 2.8-2.8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <div class="sidebar-title">لوحة العمل اليومي</div>
+          <div class="sidebar-subtitle">فريق الوعي الفكري بالخرج</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-stripe"></div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="goPage('dashboard')" data-p="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        لوحة التحكم
+      </button>
+      <button class="nav-item" onclick="goPage('records')" data-p="records">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        سجلات العمل
+      </button>
+      <button class="nav-item" onclick="goPage('stats')" data-p="stats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        الإحصائيات
+      </button>
+      <button class="nav-item" onclick="goPage('reports')" data-p="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        التقارير
+      </button>
+      <button class="nav-item" id="navUsers" onclick="goPage('users')" data-p="users" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        إدارة المستخدمين
+      </button>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sbAv">م</div>
+      <div class="user-info">
+        <div class="user-name" id="sbName">—</div>
+        <div class="user-role" id="sbRole">—</div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()" title="خروج">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-identity">
+        <div class="page-title" id="pgTitle">لوحة التحكم</div>
+        <div class="topbar-team">فريق الوعي الفكري بالخرج</div>
+      </div>
+      <div class="topbar-right">
+        <div class="current-date" id="curDate"></div>
+        <button class="btn-primary" id="addRecordBtn" onclick="openAddRec()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          إضافة سجل
+        </button>
+      </div>
+    </header>
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page active">
+      <div class="stats-grid">
+        <div class="stat-card stat-total">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
+          <div><div class="stat-num" id="stTotal">0</div><div class="stat-label">إجمالي السجلات</div></div>
+        </div>
+        <div class="stat-card stat-done">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></div>
+          <div><div class="stat-num" id="stDone">0</div><div class="stat-label">مكتملة</div></div>
+        </div>
+        <div class="stat-card stat-prog">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div>
+          <div><div class="stat-num" id="stProg">0</div><div class="stat-label">قيد التنفيذ</div></div>
+        </div>
+        <div class="stat-card stat-team">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
+          <div><div class="stat-num" id="stTeam">0</div><div class="stat-label">أعضاء الفريق</div></div>
+        </div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-header"><h3>النشاط الأخير</h3></div>
+          <div id="recentActs"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>توزيع الفئات</h3></div>
+          <div id="catChart" class="cat-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECORDS -->
+    <div id="page-records" class="page">
+      <div class="toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="srchQ" placeholder="بحث بالعنوان أو الوصف..." oninput="filterRecs()">
+        </div>
+        <div class="filter-wrap">
+          <select id="fCat" onchange="filterRecs()">
+            <option value="">جميع الفئات</option>
+            <option value="mail">المراسلات والبريد</option>
+            <option value="reports">التقارير والنماذج</option>
+            <option value="meetings">الاجتماعات</option>
+            <option value="visits">الزيارات الإشرافية</option>
+            <option value="programs">البرامج والفعاليات</option>
+            <option value="training">التدريب والتأهيل</option>
+            <option value="awareness">التوعية والنشر</option>
+            <option value="followup">المتابعة والتنسيق</option>
+            <option value="surveys">الاستبيانات وقياس الأثر</option>
+            <option value="committees">اللجان وفرق العمل</option>
+            <option value="data">البيانات والإحصاءات</option>
+            <option value="calls">المكالمات والتواصل</option>
+            <option value="admin">التكليفات الإدارية</option>
+            <option value="plans">الخطط والمبادرات</option>
+            <option value="books">متابعة الكتب</option>
+            <option value="links">متابعة الروابط</option>
+            <option value="other">أعمال أخرى</option>
+          </select>
+          <select id="fStat" onchange="filterRecs()">
+            <option value="">جميع الحالات</option>
+            <option value="completed">مكتملة</option>
+            <option value="inprogress">قيد التنفيذ</option>
+          </select>
+          <select id="fEmp" onchange="filterRecs()"><option value="">جميع الأعضاء</option></select>
+          <input type="date" id="fFrom" onchange="filterRecs()">
+          <input type="date" id="fTo" onchange="filterRecs()">
+          <button class="btn-outline" onclick="clearFilters()">مسح</button>
+        </div>
+      </div>
+      <div id="recsTbl" class="tbl-wrap"></div>
+    </div>
+
+    <!-- STATS -->
+    <div id="page-stats" class="page">
+      <div class="section-label">إحصائيات الأعضاء</div>
+      <div id="memberGrid" class="member-grid"></div>
+      <div class="section-label">إحصائيات الفريق</div>
+      <div class="team-grid">
+        <div class="card"><div class="card-header"><h3>الأنشطة حسب الفئة</h3></div><div id="teamCat" class="bar-chart"></div></div>
+        <div class="card"><div class="card-header"><h3>الأنشطة حسب الشهر</h3></div><div id="teamMonth" class="bar-chart"></div></div>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div id="page-reports" class="page">
+      <div class="reports-grid">
+        <div class="rpt-card" onclick="makeReport('weekly')">
+          <div class="rpt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <h3>التقرير الأسبوعي</h3>
+          <p>أنشطة الأسبوع الحالي مع ملخص المرفقات</p>
+          <span class="rpt-btn">إنشاء التقرير</span>
+        </div>
+        <div class="rpt-card" onclick="makeReport('monthly')">
+          <div class="rpt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <h3>التقرير الشهري</h3>
+          <p>جميع أنشطة الشهر الحالي مع إحصائيات تفصيلية</p>
+          <span class="rpt-btn">إنشاء التقرير</span>
+        </div>
+        <div class="rpt-card" onclick="showCustomRpt()">
+          <div class="rpt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+          <h3>تقرير مخصص</h3>
+          <p>حدد نطاق تاريخ وأنشئ تقريرك الخاص</p>
+          <span class="rpt-btn">إنشاء التقرير</span>
+        </div>
+      </div>
+      <div id="customRptForm" class="hidden">
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-header"><h3>تقرير مخصص</h3></div>
+          <div style="padding:18px 22px">
+            <div class="form-row">
+              <div class="form-group"><label>من تاريخ</label><input type="date" id="rptFrom"></div>
+              <div class="form-group"><label>إلى تاريخ</label><input type="date" id="rptTo"></div>
+            </div>
+            <div style="display:flex;gap:10px">
+              <button class="btn-primary" onclick="makeReport('custom')">إنشاء</button>
+              <button class="btn-outline" onclick="document.getElementById('customRptForm').classList.add('hidden')">إلغاء</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="rptOut" class="rpt-output hidden"></div>
+    </div>
+
+    <!-- USERS (admin only) -->
+    <div id="page-users" class="page">
+      <div class="page-top">
+        <button class="btn-primary" onclick="openAddUser()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          إضافة مستخدم
+        </button>
+      </div>
+      <div id="usersTbl" class="tbl-wrap"></div>
+    </div>
+  </main>
+</div>
+
+<!-- RECORD MODAL -->
+<div id="recModal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="recModalTitle">إضافة سجل عمل</h2>
+      <button class="modal-x" onclick="closeM('recModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="recId">
+      <div class="form-group"><label>وصف العمل <span class="required">*</span></label><textarea id="recDesc" rows="5" placeholder="أدخل وصفاً تفصيلياً للنشاط المنجز"></textarea></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>الفئة <span class="required">*</span></label>
+          <select id="recCat">
+            <option value="">اختر الفئة</option>
+            <option value="mail">المراسلات والبريد</option>
+            <option value="reports">التقارير والنماذج</option>
+            <option value="meetings">الاجتماعات</option>
+            <option value="visits">الزيارات الإشرافية</option>
+            <option value="programs">البرامج والفعاليات</option>
+            <option value="training">التدريب والتأهيل</option>
+            <option value="awareness">التوعية والنشر</option>
+            <option value="followup">المتابعة والتنسيق</option>
+            <option value="surveys">الاستبيانات وقياس الأثر</option>
+            <option value="committees">اللجان وفرق العمل</option>
+            <option value="data">البيانات والإحصاءات</option>
+            <option value="calls">المكالمات والتواصل</option>
+            <option value="admin">التكليفات الإدارية</option>
+            <option value="plans">الخطط والمبادرات</option>
+            <option value="books">متابعة الكتب</option>
+            <option value="links">متابعة الروابط</option>
+            <option value="other">أعمال أخرى</option>
+          </select>
+        </div>
+        <div class="form-group"><label>تاريخ العمل <span class="required">*</span></label><input type="date" id="recDate"></div>
+      </div>
+      <div class="form-group">
+        <label>الحالة</label>
+        <div class="st-toggle">
+          <button class="st-btn on" id="stPrgBtn" onclick="setSt('inprogress')">قيد التنفيذ</button>
+          <button class="st-btn" id="stDoneBtn" onclick="setSt('completed')">مكتملة</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>المرفقات</label>
+        <div class="file-drop" onclick="document.getElementById('fileInp').click()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span>انقر لرفع الملفات</span>
+          <small>PDF، Word، Excel، صور — يمكن رفع أكثر من ملف</small>
+        </div>
+        <input type="file" id="fileInp" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.gif" onchange="onFiles(event)" style="display:none">
+        <div id="fileList" class="file-list"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-primary" onclick="saveRec()">حفظ السجل</button>
+      <button class="btn-outline" onclick="closeM('recModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW MODAL -->
+<div id="viewModal" class="modal-overlay hidden">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <h2 id="viewTitle">تفاصيل السجل</h2>
+      <button class="modal-x" onclick="closeM('viewModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body" id="viewBody"></div>
+    <div class="modal-foot" id="viewFoot"></div>
+  </div>
+</div>
+
+<!-- USER MODAL -->
+<div id="userModal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="userModalTitle">إضافة مستخدم</h2>
+      <button class="modal-x" onclick="closeM('userModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="uId">
+      <div class="form-row">
+        <div class="form-group"><label>الاسم الكامل <span class="required">*</span></label><input type="text" id="uName" placeholder="الاسم الكامل"></div>
+        <div class="form-group"><label>البريد الإلكتروني <span class="required">*</span></label><input type="email" id="uEmail" placeholder="example@email.com" style="direction:ltr;text-align:right"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>كلمة المرور <span class="required">*</span></label><input type="password" id="uPass" placeholder="كلمة المرور"><div id="uPassNote" class="hidden" style="font-size:0.75rem;color:var(--text-soft);margin-top:4px">مطلوبة عند إنشاء مستخدم جديد فقط</div></div>
+        <div class="form-group"><label>الصلاحية</label><select id="uRole"><option value="member">عضو فريق</option><option value="admin">مدير</option></select></div>
+      </div>
+      <div class="form-group"><label>المسمى الوظيفي</label><input type="text" id="uTitle" placeholder="مثال: منسق برامج"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-primary" onclick="saveUser()">حفظ</button>
+      <button class="btn-outline" onclick="closeM('userModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div id="confirmModal" class="modal-overlay hidden">
+  <div class="modal modal-sm">
+    <div class="modal-head"><h2>تأكيد الحذف</h2></div>
+    <div class="modal-body"><p id="confirmMsg">هل أنت متأكد؟ لا يمكن التراجع.</p></div>
+    <div class="modal-foot">
+      <button class="btn-danger" id="confirmOk">حذف</button>
+      <button class="btn-outline" onclick="closeM('confirmModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<!-- شاشة التحميل -->
+<div id="loadingOverlay" class="modal-overlay" style="z-index:999;background:rgba(15,31,61,0.7)">
+  <div style="text-align:center;color:white">
+    <div style="width:44px;height:44px;border:4px solid rgba(255,255,255,0.2);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
+    <div class="loading-msg" style="font-size:0.95rem;font-weight:600">جارٍ التحميل…</div>
+  </div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+<script type="module">
+// ══════════════════════════════════════════════════
+//  FIREBASE SETUP
+// ══════════════════════════════════════════════════
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc,
+         getDocs, getDoc, query, orderBy, onSnapshot, serverTimestamp, setDoc }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAi15mbHKXaX8mGXdFMuW2nsux4v-cBlCs",
+  authDomain: "intellectual-awareness-team.firebaseapp.com",
+  projectId: "intellectual-awareness-team",
+  storageBucket: "intellectual-awareness-team.firebasestorage.app",
+  messagingSenderId: "616135198360",
+  appId: "1:616135198360:web:e7ad768d773eef2a1832ed"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+// ══════════════════════════════════════════════════
+//  CONSTANTS
+// ══════════════════════════════════════════════════
+const CATS = {
+  mail:'المراسلات والبريد', reports:'التقارير والنماذج', meetings:'الاجتماعات',
+  visits:'الزيارات الإشرافية', programs:'البرامج والفعاليات', training:'التدريب والتأهيل',
+  awareness:'التوعية والنشر', followup:'المتابعة والتنسيق', surveys:'الاستبيانات وقياس الأثر',
+  committees:'اللجان وفرق العمل', data:'البيانات والإحصاءات', calls:'المكالمات والتواصل',
+  admin:'التكليفات الإدارية', plans:'الخطط والمبادرات', books:'متابعة الكتب', links:'متابعة الروابط', other:'أعمال أخرى'
+};
+const CAT_CLR = {
+  mail:'#6366F1', reports:'#10B981', meetings:'#F59E0B', visits:'#8B5CF6',
+  programs:'#0EA5A0', training:'#3B82F6', awareness:'#EC4899', followup:'#14B8A6',
+  surveys:'#F97316', committees:'#84CC16', data:'#06B6D4', calls:'#A855F7',
+  admin:'#EF4444', plans:'#0F1F3D', books:'#7C3AED', links:'#0891B2', other:'#94A3B8'
+};
+
+// ══════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════
+let CU       = null;   // current user profile (from Firestore)
+let ALL_RECS = [];     // live cache of records
+let ALL_USERS= [];     // live cache of users
+let pendFiles= [];
+let curSt    = 'inprogress';
+let unsubRecs= null;   // Firestore listener unsubscribe
+
+// ══════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════
+const uName = id => { const u=ALL_USERS.find(x=>x.id===id); return u?u.name:'غير معروف'; };
+const fmtD  = s => { if(!s) return '—'; const d=new Date(s); return d.toLocaleDateString('ar-SA',{year:'numeric',month:'short',day:'numeric'}); };
+const fmtDT = s => { if(!s) return '—'; const d=s.toDate?s.toDate():new Date(s); return d.toLocaleDateString('ar-SA',{year:'numeric',month:'short',day:'numeric'})+' '+d.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'}); };
+const fmtSz = b => b<1048576?(b/1024).toFixed(0)+' KB':(b/1048576).toFixed(1)+' MB';
+const fIcon = t => ({pdf:'📄',docx:'📝',doc:'📝',xlsx:'📊',xls:'📊',image:'🖼️'}[t]||'📎');
+const fType = n => { const e=n.split('.').pop().toLowerCase(); return {pdf:'pdf',doc:'doc',docx:'docx',xls:'xls',xlsx:'xlsx',jpg:'image',jpeg:'image',png:'image',gif:'image'}[e]||'other'; };
+const canEdit = r => CU && (CU.role==='admin' || r.createdBy===CU.uid);
+
+function showLoading(msg='جارٍ التحميل…') {
+  document.getElementById('loadingOverlay').querySelector('.loading-msg').textContent = msg;
+  document.getElementById('loadingOverlay').classList.remove('hidden');
+}
+function hideLoading() { document.getElementById('loadingOverlay').classList.add('hidden'); }
+
+// ══════════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════════
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    // جلب بيانات المستخدم من Firestore
+    const snap = await getDoc(doc(db,'users', user.uid));
+    if (snap.exists()) {
+      CU = { uid: user.uid, ...snap.data() };
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('mainApp').classList.remove('hidden');
+      await loadUsers();
+      initUI();
+      startRecsListener();
+    } else {
+      // حساب Firebase موجود لكن بيانات المستخدم غير مكتملة
+      await signOut(auth);
+      toast('حساب غير مكتمل، تواصل مع المدير','err');
+    }
+  } else {
+    CU = null;
+    if (unsubRecs) { unsubRecs(); unsubRecs=null; }
+    document.getElementById('mainApp').classList.add('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
+    hideLoading();
+  }
+});
+
+async function doLogin() {
+  const email = document.getElementById('lgUser').value.trim();
+  const pass  = document.getElementById('lgPass').value.trim();
+  if (!email || !pass) { toast('يرجى إدخال البريد وكلمة المرور','err'); return; }
+  showLoading('جارٍ تسجيل الدخول…');
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch (e) {
+    hideLoading();
+    toast('البريد الإلكتروني أو كلمة المرور غير صحيحة','err');
+  }
+}
+
+async function doLogout() {
+  await signOut(auth);
+}
+
+// ══════════════════════════════════════════════════
+//  LOAD USERS (مرة واحدة عند الدخول)
+// ══════════════════════════════════════════════════
+async function loadUsers() {
+  const snap = await getDocs(collection(db,'users'));
+  ALL_USERS = snap.docs.map(d=>({id:d.id,...d.data()}));
+}
+
+// ══════════════════════════════════════════════════
+//  LIVE RECORDS LISTENER
+// ══════════════════════════════════════════════════
+function startRecsListener() {
+  const q = query(collection(db,'records'), orderBy('createdAt','desc'));
+  unsubRecs = onSnapshot(q, snap => {
+    ALL_RECS = snap.docs.map(d=>({id:d.id,...d.data()}));
+    // تحديث الصفحة الحالية تلقائياً
+    const active = document.querySelector('.page.active');
+    if (!active) return;
+    const pid = active.id.replace('page-','');
+    if (pid==='dashboard') renderDash();
+    if (pid==='records')   renderRecs();
+    if (pid==='stats')     renderStats();
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  INIT UI
+// ══════════════════════════════════════════════════
+function initUI() {
+  document.getElementById('sbName').textContent = CU.name;
+  document.getElementById('sbRole').textContent = CU.role==='admin'?'مدير':'عضو فريق';
+  document.getElementById('sbAv').textContent   = CU.name.charAt(0);
+  document.getElementById('navUsers').style.display = CU.role==='admin'?'':'none';
+  document.getElementById('addRecordBtn').style.display = '';
+  const now = new Date();
+  document.getElementById('curDate').textContent = now.toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  goPage('dashboard');
+  hideLoading();
+  toast('أهلاً ' + CU.name + ' 👋','ok');
+}
+
+// ══════════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════════
+const PAGE_TITLES = { dashboard:'لوحة التحكم', records:'سجلات العمل', stats:'الإحصائيات', reports:'التقارير', users:'إدارة المستخدمين' };
+
+function goPage(p) {
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  const pg=document.getElementById('page-'+p); if(pg) pg.classList.add('active');
+  const nv=document.querySelector('[data-p="'+p+'"]'); if(nv) nv.classList.add('active');
+  document.getElementById('pgTitle').textContent=PAGE_TITLES[p]||'';
+  if (p==='dashboard') renderDash();
+  if (p==='records')   { renderRecs(); fillEmpFilter(); }
+  if (p==='stats')     renderStats();
+  if (p==='users')     renderUsers();
+  if (window.innerWidth<900) document.getElementById('sidebar').classList.remove('open');
+}
+
+// ══════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════
+function renderDash() {
+  document.getElementById('stTotal').textContent = ALL_RECS.length;
+  document.getElementById('stDone').textContent  = ALL_RECS.filter(r=>r.status==='completed').length;
+  document.getElementById('stProg').textContent  = ALL_RECS.filter(r=>r.status==='inprogress').length;
+  document.getElementById('stTeam').textContent  = ALL_USERS.length;
+
+  const aEl = document.getElementById('recentActs');
+  const sorted = [...ALL_RECS].slice(0,7);
+  aEl.innerHTML = sorted.length ? sorted.map(r=>`
+    <div class="act-item">
+      <div class="act-dot"></div>
+      <div style="flex:1">
+        <div class="act-title">${r.description.length>70?r.description.slice(0,70)+'…':r.description}</div>
+        <div class="act-meta">${uName(r.createdBy)} · ${CATS[r.category]||r.category} · ${fmtD(r.date)}</div>
+      </div>
+      <div class="act-status">${r.status==='completed'?'<span class="s-done">مكتملة</span>':'<span class="s-prog">قيد التنفيذ</span>'}</div>
+    </div>`).join('') : '<div class="empty-act">لا توجد سجلات بعد</div>';
+
+  const tot = ALL_RECS.length||1;
+  document.getElementById('catChart').innerHTML = Object.entries(CATS).map(([k,v])=>{
+    const c=ALL_RECS.filter(r=>r.category===k).length;
+    return `<div class="cat-row">
+      <div class="cat-name">${v}</div>
+      <div class="cat-track"><div class="cat-fill" style="width:${Math.round(c/tot*100)}%;background:var(--teal)"></div></div>
+      <div class="cat-cnt">${c}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+//  RECORDS TABLE
+// ══════════════════════════════════════════════════
+function renderRecs(list) {
+  const recs = list!==undefined ? list : ALL_RECS;
+  const el = document.getElementById('recsTbl');
+  if (!recs.length) {
+    el.innerHTML=`<div class="empty-tbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg><p>لا توجد سجلات. أضف أول سجل!</p></div>`;
+    return;
+  }
+  el.innerHTML=`<table class="tbl">
+    <thead><tr><th>#</th><th>وصف العمل</th><th>الفئة</th><th>التاريخ</th><th>المنفذ</th><th>الحالة</th><th>مرفقات</th><th></th></tr></thead>
+    <tbody>${recs.map((r,i)=>`
+      <tr>
+        <td style="color:var(--text-faint);font-size:0.8rem">${i+1}</td>
+        <td style="max-width:320px"><div class="tbl-title">${r.description}</div></td>
+        <td>${CATS[r.category]||r.category}</td>
+        <td style="white-space:nowrap">${fmtD(r.date)}</td>
+        <td>${uName(r.createdBy)}</td>
+        <td>${r.status==='completed'?'<span class="s-done">مكتملة</span>':'<span class="s-prog">قيد التنفيذ</span>'}</td>
+        <td>${r.attachments&&r.attachments.length?r.attachments.length+' ملف':'—'}</td>
+        <td><div class="tbl-actions">
+          <button class="btn-icon v" onclick="window._viewRec('${r.id}')" title="عرض"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          ${canEdit(r)?`<button class="btn-icon e" onclick="window._editRec('${r.id}')" title="تعديل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>`:''}
+          ${canEdit(r)?`<button class="btn-icon d" onclick="window._delRec('${r.id}')" title="حذف"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>`:''}
+        </div></td>
+      </tr>`).join('')}
+    </tbody></table>`;
+}
+
+function filterRecs() {
+  const q=document.getElementById('srchQ').value.trim().toLowerCase();
+  const cat=document.getElementById('fCat').value, st=document.getElementById('fStat').value;
+  const emp=document.getElementById('fEmp').value;
+  const fr=document.getElementById('fFrom').value, to=document.getElementById('fTo').value;
+  let recs=[...ALL_RECS];
+  if (q)   recs=recs.filter(r=>r.description.toLowerCase().includes(q));
+  if (cat) recs=recs.filter(r=>r.category===cat);
+  if (st)  recs=recs.filter(r=>r.status===st);
+  if (emp) recs=recs.filter(r=>r.createdBy===emp);
+  if (fr)  recs=recs.filter(r=>r.date>=fr);
+  if (to)  recs=recs.filter(r=>r.date<=to);
+  renderRecs(recs);
+}
+
+function clearFilters() {
+  ['srchQ','fCat','fStat','fEmp','fFrom','fTo'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  renderRecs();
+}
+
+function fillEmpFilter() {
+  const sel=document.getElementById('fEmp'), cur=sel.value;
+  sel.innerHTML='<option value="">جميع الأعضاء</option>'+ALL_USERS.map(u=>`<option value="${u.id}"${cur===u.id?' selected':''}>${u.name}</option>`).join('');
+}
+
+// ══════════════════════════════════════════════════
+//  ADD / EDIT RECORD
+// ══════════════════════════════════════════════════
+function openAddRec() {
+  pendFiles=[]; curSt='inprogress';
+  ['recId','recDesc','recCat'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('recDate').value=new Date().toISOString().split('T')[0];
+  document.getElementById('fileList').innerHTML='';
+  document.getElementById('recModalTitle').textContent='إضافة سجل عمل';
+  setSt('inprogress');
+  document.getElementById('recModal').classList.remove('hidden');
+}
+
+function openEditRec(id) {
+  const r=ALL_RECS.find(x=>x.id===id); if(!r) return;
+  pendFiles=r.attachments?[...r.attachments]:[];
+  document.getElementById('recId').value=r.id;
+  document.getElementById('recDesc').value=r.description;
+  document.getElementById('recCat').value=r.category;
+  document.getElementById('recDate').value=r.date;
+  document.getElementById('recModalTitle').textContent='تعديل السجل';
+  setSt(r.status); renderFileList();
+  document.getElementById('recModal').classList.remove('hidden');
+}
+
+function setSt(s) {
+  curSt=s;
+  document.getElementById('stPrgBtn').classList.toggle('on', s==='inprogress');
+  document.getElementById('stDoneBtn').classList.toggle('on', s==='completed');
+}
+
+function onFiles(e) {
+  Array.from(e.target.files).forEach(f=>pendFiles.push({name:f.name,size:f.size,type:fType(f.name)}));
+  renderFileList(); e.target.value='';
+}
+
+function renderFileList() {
+  document.getElementById('fileList').innerHTML=pendFiles.map((f,i)=>`
+    <div class="file-item">
+      <span class="fi-icon">${fIcon(f.type)}</span>
+      <span class="fi-name">${f.name}</span>
+      <span class="fi-size">${fmtSz(f.size)}</span>
+      <button class="fi-rm" onclick="window._rmFile(${i})">✕</button>
+    </div>`).join('');
+}
+
+async function saveRec() {
+  const desc=document.getElementById('recDesc').value.trim();
+  const cat=document.getElementById('recCat').value;
+  const date=document.getElementById('recDate').value;
+  if (!desc||!cat||!date) { toast('يرجى تعبئة جميع الحقول المطلوبة','err'); return; }
+  const autoTitle = desc.length>60?desc.slice(0,60)+'…':desc;
+  const eid = document.getElementById('recId').value;
+  showLoading('جارٍ الحفظ…');
+  try {
+    if (eid) {
+      const r=ALL_RECS.find(x=>x.id===eid);
+      const newHistory=[...(r.history||[]),{action:'تم التعديل',user:CU.uid,date:new Date().toISOString()}];
+      await updateDoc(doc(db,'records',eid),{
+        title:autoTitle, description:desc, category:cat, date, status:curSt,
+        attachments:pendFiles, updatedAt:serverTimestamp(), history:newHistory
+      });
+      toast('تم تحديث السجل','ok');
+    } else {
+      await addDoc(collection(db,'records'),{
+        title:autoTitle, description:desc, category:cat, date, status:curSt,
+        attachments:pendFiles, createdBy:CU.uid,
+        createdAt:serverTimestamp(), updatedAt:serverTimestamp(),
+        history:[{action:'تم الإنشاء',user:CU.uid,date:new Date().toISOString()}]
+      });
+      toast('تم إضافة السجل ✓','ok');
+    }
+    closeM('recModal');
+  } catch(e) { toast('حدث خطأ أثناء الحفظ','err'); }
+  hideLoading();
+}
+
+function viewRec(id) {
+  const r=ALL_RECS.find(x=>x.id===id); if(!r) return;
+  document.getElementById('viewTitle').textContent='تفاصيل السجل';
+  document.getElementById('viewBody').innerHTML=`
+    <div class="vd-grid">
+      <div class="vd-box"><div class="vd-lbl">الفئة</div><div class="vd-val">${CATS[r.category]||r.category}</div></div>
+      <div class="vd-box"><div class="vd-lbl">تاريخ العمل</div><div class="vd-val">${fmtD(r.date)}</div></div>
+      <div class="vd-box"><div class="vd-lbl">الحالة</div><div class="vd-val">${r.status==='completed'?'<span class="s-done">مكتملة</span>':'<span class="s-prog">قيد التنفيذ</span>'}</div></div>
+      <div class="vd-box"><div class="vd-lbl">المنفذ</div><div class="vd-val">${uName(r.createdBy)}</div></div>
+      <div class="vd-box"><div class="vd-lbl">تاريخ الإنشاء</div><div class="vd-val">${fmtDT(r.createdAt)}</div></div>
+      <div class="vd-box"><div class="vd-lbl">آخر تعديل</div><div class="vd-val">${fmtDT(r.updatedAt)}</div></div>
+    </div>
+    <div class="vd-slbl">الوصف</div>
+    <div class="vd-desc"><p>${r.description}</p></div>
+    ${r.attachments&&r.attachments.length?`
+    <div class="vd-slbl" style="margin-bottom:8px">المرفقات (${r.attachments.length})</div>
+    <div class="atts-row" style="margin-bottom:14px">${r.attachments.map(a=>`<div class="att-chip">${fIcon(a.type)} ${a.name} <span style="color:var(--text-faint)">${fmtSz(a.size)}</span></div>`).join('')}</div>`:''}
+    <div class="vd-slbl" style="margin-bottom:8px">سجل التعديلات</div>
+    <div class="hist-list">${(r.history||[]).map(h=>`
+      <div class="hist-item"><div class="hist-dot"></div><div><div class="hist-txt">${h.action} بواسطة <strong>${uName(h.user)}</strong></div><div class="hist-dt">${fmtDT(h.date)}</div></div></div>`).join('')}
+    </div>`;
+  document.getElementById('viewFoot').innerHTML=canEdit(r)
+    ?`<button class="btn-primary" onclick="closeM('viewModal');window._editRec('${r.id}')">تعديل السجل</button><button class="btn-outline" onclick="closeM('viewModal')">إغلاق</button>`
+    :`<button class="btn-outline" onclick="closeM('viewModal')">إغلاق</button>`;
+  document.getElementById('viewModal').classList.remove('hidden');
+}
+
+async function delRec(id) {
+  document.getElementById('confirmMsg').textContent='هل أنت متأكد من حذف هذا السجل؟ لا يمكن التراجع.';
+  document.getElementById('confirmOk').onclick=async()=>{
+    showLoading('جارٍ الحذف…');
+    await deleteDoc(doc(db,'records',id));
+    closeM('confirmModal'); hideLoading(); toast('تم الحذف','ok');
+  };
+  document.getElementById('confirmModal').classList.remove('hidden');
+}
+
+// ══════════════════════════════════════════════════
+//  STATS
+// ══════════════════════════════════════════════════
+function renderStats() {
+  document.getElementById('memberGrid').innerHTML=ALL_USERS.map(u=>{
+    const ur=ALL_RECS.filter(r=>r.createdBy===u.id);
+    const done=ur.filter(r=>r.status==='completed').length;
+    const prog=ur.filter(r=>r.status==='inprogress').length;
+    const atts=ur.reduce((s,r)=>s+(r.attachments?r.attachments.length:0),0);
+    return `<div class="member-card">
+      <div class="mc-head"><div class="mc-av">${u.name.charAt(0)}</div><div><div class="mc-name">${u.name}</div><div class="mc-role">${u.title||(u.role==='admin'?'مدير':'عضو')}</div></div></div>
+      <div class="mc-nums">
+        <div class="mc-num"><div class="mc-n">${ur.length}</div><div class="mc-l">إجمالي</div></div>
+        <div class="mc-num"><div class="mc-n" style="color:var(--green)">${done}</div><div class="mc-l">مكتملة</div></div>
+        <div class="mc-num"><div class="mc-n" style="color:var(--amber)">${prog}</div><div class="mc-l">قيد التنفيذ</div></div>
+      </div>
+      <div class="mc-atts">${atts} مرفق</div>
+    </div>`;
+  }).join('');
+
+  const maxC=Math.max(...Object.keys(CATS).map(c=>ALL_RECS.filter(r=>r.category===c).length),1);
+  document.getElementById('teamCat').innerHTML=Object.entries(CATS).map(([k,v])=>{
+    const c=ALL_RECS.filter(r=>r.category===k).length;
+    return `<div class="bar-item"><div class="bar-top"><span class="bar-name">${v}</span><span class="bar-val">${c}</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/maxC*100)}%;background:${CAT_CLR[k]}"></div></div></div>`;
+  }).join('');
+
+  const months={};
+  ALL_RECS.forEach(r=>{ const m=r.date?r.date.slice(0,7):null; if(m) months[m]=(months[m]||0)+1; });
+  const sm=Object.entries(months).sort((a,b)=>a[0].localeCompare(b[0])).slice(-6);
+  const maxM=Math.max(...sm.map(x=>x[1]),1);
+  document.getElementById('teamMonth').innerHTML=sm.length
+    ?sm.map(([m,c])=>{
+        const label=new Date(m+'-01').toLocaleDateString('ar-SA',{year:'numeric',month:'short'});
+        return `<div class="bar-item"><div class="bar-top"><span class="bar-name">${label}</span><span class="bar-val">${c}</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/maxM*100)}%"></div></div></div>`;
+      }).join('')
+    :'<div style="padding:20px;text-align:center;color:var(--text-faint);font-size:0.875rem">لا توجد بيانات</div>';
+}
+
+// ══════════════════════════════════════════════════
+//  REPORTS
+// ══════════════════════════════════════════════════
+function showCustomRpt() { document.getElementById('customRptForm').classList.remove('hidden'); }
+
+function makeReport(type) {
+  const today=new Date(); let from,to,title,period;
+  if (type==='weekly') {
+    const day=today.getDay(), diff=day===0?-6:1-day;
+    const mon=new Date(today); mon.setDate(today.getDate()+diff);
+    const sun=new Date(mon); sun.setDate(mon.getDate()+6);
+    from=mon.toISOString().split('T')[0]; to=sun.toISOString().split('T')[0];
+    title='التقرير الأسبوعي'; period=fmtD(from)+' – '+fmtD(to);
+  } else if (type==='monthly') {
+    from=new Date(today.getFullYear(),today.getMonth(),1).toISOString().split('T')[0];
+    to=new Date(today.getFullYear(),today.getMonth()+1,0).toISOString().split('T')[0];
+    title='التقرير الشهري'; period=today.toLocaleDateString('ar-SA',{year:'numeric',month:'long'});
+  } else {
+    from=document.getElementById('rptFrom').value; to=document.getElementById('rptTo').value;
+    if (!from||!to) { toast('يرجى تحديد نطاق التاريخ','err'); return; }
+    title='تقرير مخصص'; period=fmtD(from)+' – '+fmtD(to);
+  }
+  const recs=ALL_RECS.filter(r=>r.date>=from&&r.date<=to);
+  const done=recs.filter(r=>r.status==='completed'), prog=recs.filter(r=>r.status==='inprogress');
+  const atts=recs.reduce((s,r)=>s+(r.attachments?r.attachments.length:0),0);
+  const catRows=Object.entries(CATS).map(([k,v])=>{const c=recs.filter(r=>r.category===k).length;return c?`<tr><td>${v}</td><td style="text-align:center">${c}</td></tr>`:''}).join('');
+  const memRows=ALL_USERS.map(u=>{const ur=recs.filter(r=>r.createdBy===u.id);return ur.length?`<tr><td>${u.name}</td><td style="text-align:center">${ur.length}</td><td style="text-align:center">${ur.filter(r=>r.status==='completed').length}</td><td style="text-align:center">${ur.filter(r=>r.status==='inprogress').length}</td></tr>`:''}).join('');
+  document.getElementById('rptOut').innerHTML=`
+    <div class="rpt-header">
+      <div class="rpt-org">فريق الوعي الفكري بالخرج</div>
+      <div class="rpt-title">${title}</div>
+      <div class="rpt-period">${period}</div>
+      <div class="rpt-issued">تاريخ الإصدار: ${fmtD(today.toISOString().split('T')[0])}</div>
+    </div>
+    <div class="rpt-summary">
+      <div class="rpt-sum-box"><div class="rpt-sum-n">${recs.length}</div><div class="rpt-sum-l">إجمالي الأنشطة</div></div>
+      <div class="rpt-sum-box"><div class="rpt-sum-n" style="color:var(--green)">${done.length}</div><div class="rpt-sum-l">مكتملة</div></div>
+      <div class="rpt-sum-box"><div class="rpt-sum-n" style="color:var(--amber)">${prog.length}</div><div class="rpt-sum-l">قيد التنفيذ</div></div>
+    </div>
+    ${done.length?`<div class="rpt-section">الأنشطة المكتملة (${done.length})</div><table class="rpt-table"><thead><tr><th>وصف العمل</th><th>الفئة</th><th>التاريخ</th><th>المنفذ</th><th>مرفقات</th></tr></thead><tbody>${done.map(r=>`<tr><td>${r.description}</td><td>${CATS[r.category]||r.category}</td><td>${fmtD(r.date)}</td><td>${uName(r.createdBy)}</td><td>${r.attachments?r.attachments.length:0}</td></tr>`).join('')}</tbody></table>`:''}
+    ${prog.length?`<div class="rpt-section">الأنشطة قيد التنفيذ (${prog.length})</div><table class="rpt-table"><thead><tr><th>وصف العمل</th><th>الفئة</th><th>التاريخ</th><th>المنفذ</th></tr></thead><tbody>${prog.map(r=>`<tr><td>${r.description}</td><td>${CATS[r.category]||r.category}</td><td>${fmtD(r.date)}</td><td>${uName(r.createdBy)}</td></tr>`).join('')}</tbody></table>`:''}
+    ${catRows?`<div class="rpt-section">التوزيع حسب الفئة</div><table class="rpt-table" style="max-width:340px"><thead><tr><th>الفئة</th><th style="text-align:center">العدد</th></tr></thead><tbody>${catRows}</tbody></table>`:''}
+    ${type!=='weekly'&&memRows?`<div class="rpt-section">إحصائيات الأعضاء</div><table class="rpt-table"><thead><tr><th>العضو</th><th style="text-align:center">الإجمالي</th><th style="text-align:center">مكتملة</th><th style="text-align:center">قيد التنفيذ</th></tr></thead><tbody>${memRows}</tbody></table>`:''}
+    <div class="rpt-footer-note">إجمالي المرفقات: ${atts} ملف</div>
+    <div class="rpt-actions">
+      <button class="btn-primary" onclick="window.print()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><polyline points="6,9 6,2 18,2 18,9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> طباعة / PDF</button>
+      <button class="btn-outline" onclick="document.getElementById('rptOut').classList.add('hidden')">إغلاق</button>
+    </div>`;
+  document.getElementById('rptOut').classList.remove('hidden');
+  document.getElementById('rptOut').scrollIntoView({behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════════════
+//  USERS (المدير فقط)
+// ══════════════════════════════════════════════════
+function renderUsers() {
+  if (CU.role!=='admin') return;
+  document.getElementById('usersTbl').innerHTML=`<table class="tbl">
+    <thead><tr><th>الاسم</th><th>البريد الإلكتروني</th><th>المسمى الوظيفي</th><th>الصلاحية</th><th>عدد السجلات</th><th></th></tr></thead>
+    <tbody>${ALL_USERS.map(u=>{
+      const cnt=ALL_RECS.filter(r=>r.createdBy===u.id).length;
+      return `<tr>
+        <td><div style="display:flex;align-items:center;gap:10px"><div class="mc-av" style="width:30px;height:30px;font-size:0.78rem">${u.name.charAt(0)}</div>${u.name}</div></td>
+        <td style="font-size:0.82rem">${u.email||'—'}</td>
+        <td>${u.title||'—'}</td>
+        <td>${u.role==='admin'?'مدير':'عضو فريق'}</td>
+        <td>${cnt} سجل</td>
+        <td><div class="tbl-actions">
+          <button class="btn-icon e" onclick="window._editUser('${u.id}')" title="تعديل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          ${u.id!==CU.uid?`<button class="btn-icon d" onclick="window._delUser('${u.id}')" title="حذف"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>`:''}
+        </div></td>
+      </tr>`;
+    }).join('')}</tbody></table>`;
+}
+
+function openAddUser() {
+  ['uId','uName','uEmail','uPass','uTitle'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('uRole').value='member';
+  document.getElementById('userModalTitle').textContent='إضافة مستخدم';
+  document.getElementById('uPassNote').classList.remove('hidden');
+  document.getElementById('userModal').classList.remove('hidden');
+}
+
+function openEditUser(id) {
+  const u=ALL_USERS.find(x=>x.id===id); if(!u) return;
+  document.getElementById('uId').value=u.id;
+  document.getElementById('uName').value=u.name;
+  document.getElementById('uEmail').value=u.email||'';
+  document.getElementById('uPass').value='';
+  document.getElementById('uRole').value=u.role;
+  document.getElementById('uTitle').value=u.title||'';
+  document.getElementById('uPassNote').classList.add('hidden');
+  document.getElementById('userModalTitle').textContent='تعديل المستخدم';
+  document.getElementById('userModal').classList.remove('hidden');
+}
+
+async function saveUser() {
+  const name=document.getElementById('uName').value.trim();
+  const email=document.getElementById('uEmail').value.trim();
+  const pass=document.getElementById('uPass').value.trim();
+  const role=document.getElementById('uRole').value;
+  const title=document.getElementById('uTitle').value.trim();
+  const eid=document.getElementById('uId').value;
+  if (!name||!email) { toast('يرجى تعبئة الاسم والبريد الإلكتروني','err'); return; }
+  showLoading('جارٍ الحفظ…');
+  try {
+    if (eid) {
+      // تعديل بيانات المستخدم في Firestore فقط
+      await updateDoc(doc(db,'users',eid),{name,email,role,title});
+      toast('تم تحديث بيانات المستخدم','ok');
+    } else {
+      // إنشاء مستخدم جديد عبر Cloud Function أو مباشرة
+      if (!pass) { hideLoading(); toast('يرجى إدخال كلمة المرور للمستخدم الجديد','err'); return; }
+      // نستخدم REST API لإنشاء المستخدم من جانب العميل
+      const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAi15mbHKXaX8mGXdFMuW2nsux4v-cBlCs`,{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email,password:pass,returnSecureToken:true})
+      });
+      const data = await res.json();
+      if (data.error) { hideLoading(); toast('خطأ: '+data.error.message,'err'); return; }
+      const uid = data.localId;
+      await setDoc(doc(db,'users',uid),{name,email,role,title,createdAt:new Date().toISOString()});
+      await loadUsers();
+      toast('تم إضافة المستخدم بنجاح','ok');
+    }
+    await loadUsers();
+    closeM('userModal'); renderUsers();
+  } catch(e) { toast('حدث خطأ: '+e.message,'err'); }
+  hideLoading();
+}
+
+async function delUser(id) {
+  document.getElementById('confirmMsg').textContent='هل أنت متأكد من حذف هذا المستخدم؟';
+  document.getElementById('confirmOk').onclick=async()=>{
+    showLoading('جارٍ الحذف…');
+    await deleteDoc(doc(db,'users',id));
+    await loadUsers();
+    closeM('confirmModal'); hideLoading(); toast('تم الحذف','ok'); renderUsers();
+  };
+  document.getElementById('confirmModal').classList.remove('hidden');
+}
+
+// ══════════════════════════════════════════════════
+//  MODAL & TOAST
+// ══════════════════════════════════════════════════
+function closeM(id) { document.getElementById(id).classList.add('hidden'); }
+
+document.querySelectorAll('.modal-overlay').forEach(ov=>{
+  ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.add('hidden'); });
+});
+
+document.getElementById('lgPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+
+function toast(msg, type='') {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast'+(type?' '+type:'');
+  t.classList.remove('hidden');
+  setTimeout(()=>t.classList.add('hidden'),3500);
+}
+
+// ══════════════════════════════════════════════════
+//  EXPOSE TO HTML onclick attributes
+// ══════════════════════════════════════════════════
+Object.assign(window, {
+  doLogin, doLogout, goPage, openAddRec, openAddUser,
+  saveRec, saveUser, closeM, filterRecs, clearFilters,
+  fillEmpFilter, showCustomRpt, makeReport,
+  setSt, onFiles,
+  _viewRec: viewRec,
+  _editRec: openEditRec,
+  _delRec:  delRec,
+  _editUser: openEditUser,
+  _delUser:  delUser,
+  _rmFile: (i)=>{ pendFiles.splice(i,1); renderFileList(); }
+});
+
+// ══════════════════════════════════════════════════
+//  START — إظهار شاشة التحميل عند الفتح
+// ══════════════════════════════════════════════════
+showLoading('جارٍ التحقق من الجلسة…');
+</script>
+
+
+</body>
+</html>
